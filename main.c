@@ -10,20 +10,30 @@ node* head = NULL;
 void add();
 void show();
 void delete();
+void post(node *root);
+void in(node *root);
+void pre(node *root);
+
 
 int main() {
-    node* tmp;
-    tmp = (node*)malloc(sizeof (node*));
+    node* tmp1;
+    tmp1 = (node*)malloc(sizeof (node*));
     printf("Hello, World!\n");
     add();
+    tmp1 = head;
+//    show();
+//    delete();
+//    pre(head);
+//    post(head);
+//    in(head);
+
     add();
-    add();
-    add();
-    add();
-    add();
-    tmp = head;
-    delete();
-    tmp = head;
+   add();
+   add();
+//    tmp = head;
+//    delete();
+//    tmp = head;
+//    show();
 //    printf("\n");
 //    printf("%d",head->value);
 //    printf("\n");
@@ -39,8 +49,12 @@ void add(){
     int entry,flag;
     scanf("%d",&entry);
     node* tmp, *prev, *newNode;
-    tmp = prev = newNode = (node*)malloc(sizeof (node*));
-    newNode -> left = newNode -> right = NULL;
+    prev  = (node*)malloc(sizeof (node*));
+    tmp = (node*)malloc(sizeof (node*));
+    newNode = (node*)malloc(sizeof (node*));
+
+    newNode -> left  = NULL;
+    newNode -> right = NULL;
     if (head == NULL){
         newNode -> value = entry;
         head = newNode;
@@ -66,13 +80,16 @@ void add(){
 
 
     }
+    free(tmp);
+    free(prev);
+
 }
 
 void delete() {
     int entry, flag;
     scanf("%d", &entry);
-    node *tmp, *prev, *newNode, *tmp1;
-    tmp = tmp1 = prev = newNode = (node *) malloc(sizeof(node *));
+    node *tmp, *prev, *newNode, *a, *b;
+    tmp = a = b = prev = newNode = (node *) malloc(sizeof(node *));
     newNode->left = newNode->right = NULL;
     if (head == NULL) {
         return;
@@ -88,25 +105,60 @@ void delete() {
                 tmp = tmp->left;
                 flag = 1;
             } else if (tmp->value == entry) {
-                if (tmp->left == NULL && tmp->right == NULL) {
-                    if (flag == 1) { prev->left = NULL; }
-                    else {
-                        prev->right = NULL;
-                        return;
-                    }
-                    tmp = prev;
-                    tmp1 = prev;
-                    while (prev->left != NULL) {
-                        tmp = prev;
-                        prev = prev->left;
-                    }
-                    tmp1->value = tmp->value;
-                    tmp->left = tmp->left->left;
-                    tmp->right = tmp -> right -> right;
-                }
-
+               break;
             }
 
+        }
+
+        if (tmp->left == NULL && tmp->right == NULL) {
+            if (flag == 1) { prev->left = NULL; }
+            else {
+                prev->right = NULL;
+            }
+            return;
+        }else if (tmp -> left == NULL){
+            if (flag == 1){
+                prev -> left = tmp -> right;
+                tmp-> right = NULL;
+                free(tmp);
+            }else{
+                prev -> right = tmp -> right;
+                tmp-> right = NULL;
+                free(tmp);
+            }
+            return;
+        }else if (tmp -> right == NULL){
+            if (flag == 1){
+                prev -> left = tmp -> left;
+                tmp -> left = NULL;
+                free(tmp);
+            }else{
+                prev -> right = tmp -> left;
+                tmp -> right = NULL;
+                free(tmp);
+            }
+            return;
+
+        }else{
+            a = tmp->right;
+            while (a->left != NULL) {
+                b = a;
+                a = a->left;
+            }
+            if (a->right != NULL) {
+                b -> left = a -> right;
+            }else{
+                b -> left = NULL;
+            }
+            a -> left = tmp -> left;
+            a -> right = tmp -> right;
+            if (flag == 1) {
+                prev->left = a;
+            }else{
+                prev -> right = a;
+            }
+            free(tmp);
+            return;
 
         }
 
@@ -114,6 +166,32 @@ void delete() {
 }
 
 void show(){
-    int id = 1;
+   int id = 1;
+}
 
+void post(node *root) // displaying the nodes!
+{
+    if (root != NULL) {
+        post(root->left);
+        post(root->right);
+        printf("%d \n", root->value);
+    }
+}
+
+void in(node *root) // displaying the nodes!
+{
+    if (root != NULL) {
+        in(root->left);
+        printf("%d \n", root->value);
+        in(root->right);
+    }
+}
+
+void pre(node *root) // displaying the nodes!
+{
+    printf("%d \n", root->value);
+    if (root != NULL) {
+        pre(root->left);
+        pre(root->right);
+    }
 }
