@@ -9,7 +9,7 @@ typedef struct Node{
 node* head = NULL;
 void add();
 void show();
-void delete();
+int delete();
 void post(node *root);
 void in(node *root);
 void pre(node *root);
@@ -19,29 +19,20 @@ int main() {
     node* tmp1;
     tmp1 = (node*)malloc(sizeof (node*));
     printf("Hello, World!\n");
-    add();
     tmp1 = head;
-//    show();
-//    delete();
-//    pre(head);
-//    post(head);
-//    in(head);
-
     add();
-   add();
-   add();
-//    tmp = head;
-//    delete();
-//    tmp = head;
-//    show();
-//    printf("\n");
-//    printf("%d",head->value);
-//    printf("\n");
-//    printf("%d",head->left->value);
-//    printf("\n");
-//    printf("%d",head->right->value);
-//    printf("\n");
-//    printf("%d",head->right->value);
+    add();
+    add();
+
+    delete();
+    printf("\n");
+    post(head);
+    printf("\n");
+    in(head);
+    printf("\n");
+    pre(head);
+
+    tmp1 = head;
     return 0;
 }
 
@@ -78,119 +69,67 @@ void add(){
             prev -> right = newNode;
         }
 
-
     }
-    free(tmp);
-    free(prev);
-
 }
 
-void delete() {
+int delete() {
     int entry, flag;
     scanf("%d", &entry);
-    node *tmp, *prev, *newNode, *a, *b;
-    tmp = a = b = prev = newNode = (node *) malloc(sizeof(node *));
-    newNode->left = newNode->right = NULL;
-    if (head == NULL) {
-        return;
-    } else {
-        tmp = head;
-        while (tmp->value != entry && tmp != NULL) {
-            if (tmp->value < entry) {
-                prev = tmp;
-                tmp = tmp->right;
-                flag = 0;
-            } else if (tmp->value > entry) {
-                prev = tmp;
-                tmp = tmp->left;
-                flag = 1;
-            } else if (tmp->value == entry) {
-               break;
-            }
-
+    node *curr = head, *prev = NULL, *toRemove, *replacement;
+//    curr = (node *) malloc(sizeof(node *));
+//    prev = (node *) malloc(sizeof(node *));
+    toRemove = (node *) malloc(sizeof(node *));
+    replacement= (node *) malloc(sizeof(node *));
+    flag = 0;
+    while (curr != NULL && entry != curr->value){
+        prev = curr;
+        if (entry < curr->value){
+            flag = 1; curr = curr->left;
+        } else {
+            flag = 0; curr = curr->right;
         }
-
-        if (tmp->left == NULL && tmp->right == NULL) {
-            if (flag == 1) { prev->left = NULL; }
-            else {
-                prev->right = NULL;
-            }
-            return;
-        }else if (tmp -> left == NULL){
-            if (flag == 1){
-                prev -> left = tmp -> right;
-                tmp-> right = NULL;
-                free(tmp);
-            }else{
-                prev -> right = tmp -> right;
-                tmp-> right = NULL;
-                free(tmp);
-            }
-            return;
-        }else if (tmp -> right == NULL){
-            if (flag == 1){
-                prev -> left = tmp -> left;
-                tmp -> left = NULL;
-                free(tmp);
-            }else{
-                prev -> right = tmp -> left;
-                tmp -> right = NULL;
-                free(tmp);
-            }
-            return;
-
-        }else{
-            a = tmp->right;
-            while (a->left != NULL) {
-                b = a;
-                a = a->left;
-            }
-            if (a->right != NULL) {
-                b -> left = a -> right;
-            }else{
-                b -> left = NULL;
-            }
-            a -> left = tmp -> left;
-            a -> right = tmp -> right;
-            if (flag == 1) {
-                prev->left = a;
-            }else{
-                prev -> right = a;
-            }
-            free(tmp);
-            return;
-
-        }
-
     }
+    if (curr==NULL) return 1;
+    if (curr->left != NULL && curr->right != NULL){
+        toRemove = curr;
+        prev = curr; flag = 0; curr = curr->right;
+        while (curr->left != NULL){
+            flag = 1; prev = curr; curr = curr->left;
+        }
+        toRemove->value = curr->value;
+    }
+    if (curr->right == NULL){
+        replacement = curr->left;
+    } else replacement = curr->right;
+    if (prev == NULL){
+        head = replacement;
+    } else if (flag == 1){
+        prev->left = replacement;
+    } else {
+        prev->right = replacement;
+    }
+    return 0;
+
 }
 
-void show(){
-   int id = 1;
-}
 
-void post(node *root) // displaying the nodes!
-{
+void post(node *root) {
     if (root != NULL) {
         post(root->left);
         post(root->right);
-        printf("%d \n", root->value);
+        printf("%d ", root->value);
     }
 }
-
-void in(node *root) // displaying the nodes!
-{
+void in(node* root){
     if (root != NULL) {
         in(root->left);
-        printf("%d \n", root->value);
+        printf("%d ", root->value);
         in(root->right);
     }
 }
-
-void pre(node *root) // displaying the nodes!
-{
-    printf("%d \n", root->value);
-    if (root != NULL) {
+void pre(node* root){
+    if (root != NULL){
+        printf("%d ", root->value);
         pre(root->left);
         pre(root->right);
     }
