@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <malloc.h>
+#include <string.h>
 
 typedef struct Node{
     int value;
@@ -7,38 +8,78 @@ typedef struct Node{
     struct Node* right;
 }node;
 node* head = NULL;
+
 void add();
 void show();
 int delete();
 void post(node *root);
 void in(node *root);
 void pre(node *root);
+void clear();
 
 
 int main() {
-    node* tmp1;
-    tmp1 = (node*)malloc(sizeof (node*));
-    printf("Hello, World!\n");
-    tmp1 = head;
-    add();
-    add();
-    add();
+    char enter[100];
+    while (1) {
+        printf("\n");
+        printf("----------------There are some Binary Tree commands----------------\n");
+        printf("1. Add new root\n");
+        printf("2. Delete root\n");
+        printf("3. Pre\n");
+        printf("4. In\n");
+        printf("5. Post\n");
+        printf("6. Clear tree\n");
+        printf("7. Exit\n");
+        printf("--------------------------------------------------------------\n");
+        printf("Enter the number of the command:");
 
-    delete();
-    printf("\n");
-    post(head);
-    printf("\n");
-    in(head);
-    printf("\n");
-    pre(head);
 
-    tmp1 = head;
+
+
+        while (fgets(enter,100,stdin)==NULL && enter[0] != '\n');
+        printf("--------------------------------------------------------------\n");
+        if (strcmp(enter, "7\n") == 0) {
+            printf("Goodbye\n");
+            printf("--------------------------------------------------------------\n");
+            exit(0);
+
+        }
+        else if (strcmp(enter, "1\n") == 0) {
+            add();
+            continue;
+        } else if (strcmp(enter, "2\n") == 0) {
+            int entry,f = 0;
+            while (scanf("%d",&entry)==0);
+            delete(entry);
+            continue;
+        } else if (strcmp(enter, "6\n") == 0) {
+            clear();
+            continue;
+        } else if (strcmp(enter, "3\n") == 0) {
+            pre(head);
+            continue;
+        } else if (strcmp(enter, "4\n") == 0) {
+            in(head);
+            continue;
+        }else if (strcmp(enter, "5\n") == 0) {
+            post(head);
+            continue;
+        } else if (strcmp(enter, "\n") == 0) {continue;}
+        else {
+            printf("Incorrect input. Try again");
+            continue;
+        }
+
+
+        printf("Hello, World!\n");
+        exit(0);
+    }
     return 0;
 }
 
 void add(){
-    int entry,flag;
-    scanf("%d",&entry);
+    int entry,flag,f = 0;
+    while (scanf("%d",&entry)==0);
     node* tmp, *prev, *newNode;
     prev  = (node*)malloc(sizeof (node*));
     tmp = (node*)malloc(sizeof (node*));
@@ -56,7 +97,7 @@ void add(){
                 prev = tmp;
                 tmp = tmp -> right;
                 flag = 0;
-            }else if (tmp -> value > entry){
+            }else if (tmp -> value >= entry){
                 prev = tmp;
                 tmp = tmp -> left;
                 flag = 1;
@@ -72,9 +113,8 @@ void add(){
     }
 }
 
-int delete() {
-    int entry, flag;
-    scanf("%d", &entry);
+int delete(int entry) {
+    int flag;
     node *curr = head, *prev = NULL, *toRemove, *replacement;
 //    curr = (node *) malloc(sizeof(node *));
 //    prev = (node *) malloc(sizeof(node *));
@@ -132,5 +172,12 @@ void pre(node* root){
         printf("%d ", root->value);
         pre(root->left);
         pre(root->right);
+    }
+}
+
+void clear(){
+    while (head != NULL){
+        delete(head -> value);
+
     }
 }
