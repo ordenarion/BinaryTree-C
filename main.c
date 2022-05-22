@@ -49,7 +49,8 @@ int main() {
             continue;
         } else if (strcmp(enter, "2\n") == 0) {
             int entry,f = 0;
-            while (scanf("%d",&entry)==0);
+            char term;
+            if (scanf("%d%c", &entry, &term) != 2 || term != '\n') continue;
             delete(entry);
             continue;
         } else if (strcmp(enter, "6\n") == 0) {
@@ -79,7 +80,9 @@ int main() {
 
 void add(){
     int entry,flag,f = 0;
-    while (scanf("%d",&entry)==0);
+    char term;
+    if (scanf("%d%c", &entry, &term) != 2 || term != '\n') return;
+
     node* tmp, *prev, *newNode;
     prev  = (node*)malloc(sizeof (node*));
     tmp = (node*)malloc(sizeof (node*));
@@ -178,6 +181,6 @@ void pre(node* root){
 void clear(){
     while (head != NULL){
         delete(head -> value);
-
     }
+    head = NULL;
 }
